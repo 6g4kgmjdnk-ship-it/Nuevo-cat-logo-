@@ -1,0 +1,122 @@
+const WHATSAPP = "573116723104";
+const INSTAGRAM = "https://instagram.com/";
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const money = n => "$" + Number(n).toLocaleString("es-CO");
+const find = id => productos.find(p => p.id === id);
+
+let productos = [], cat = "todo", abierto = null, talla = null, carrito = [];
+try { carrito = JSON.parse(localStorage.getItem("a4s-carrito") || "[]"); } catch (e) {}
+const guardar = () => { try { localStorage.setItem("a4s-carrito", JSON.stringify(carrito)); } catch (e) {} };
+
+function aviso(t) {
+  const a = $("#aviso"); a.textContent = t; a.classList.add("ver");
+  clearTimeout(aviso.t); aviso.t = setTimeout(() => a.classList.remove("ver"), 1600);
+}
+
+/* ---------- Catálogo ---------- */
+function pintarGrid() {
+  const lista = productos.filter(p => cat === "todo" || p.categoria === cat);
+  $("#grid").innerHTML = lista.map(p => `
+    <article class="item ${p.agotado ? "agotado" : ""}" data-id="${p.id}">
+      <img src="${p.imagen}" alt="${p.nombre}" loading="lazy">
+      <h3>${p.nombre}</h3>
+      <p>${p.agotado ? "Agotado" : money(p.precio)}</p>
+    </article>`).join("");
+}
+$("#grid").onclick = e => {
+  const a = e.target.closest(".item");
+  if (a) abrirDetalle(Number(a.dataset.id));
+};
+
+/* ---------- Detalle de producto ---------- */
+function abrirDetalle(id) {
+  const p = find(id); abierto = p; talla = null;
+  $("#d-img").src = p.imagen;
+  $("#d-nombre").textContent = p.nombre;
+  $("#d-precio").textContent = money(p.precio);
+  $("#d-desc").textContent = p.descripcion || "";
+  $("#d-tallas").innerHTML = (p.tallas || []).map(t => `<button data-t="${t}">${t}</button>`).join("");
+  $("#d-agregar").disabled = !!p.agotado;
+  $("#d-agregar").textContent = p.agotado ? "Agotado" : "Agregar al carrito";
+  $("#detalle").hidden = false; $("#detalle").scrollTop = 0;
+  document.body.style.overflow = "hidden";
+}
+$("#d-tallas").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  talla = b.dataset.t;
+  $$("#d-tallas button").forEach(x => x.classList.toggle("on", x === b));
+};
+$("#d-agregar").onclick = () => {
+  if (abierto.tallas && abierto.tallas.length && !talla) return aviso("Elige una talla");
+  const t = talla || "";
+  const ya = carrito.find(i => i.id === abierto.id && i.talla === t);
+  ya ? ya.cant++ : carrito.push({ id: abierto.id, talla: t, cant: 1 });
+  guardar(); pintarCarrito(); aviso("Agregado al carrito");
+  $("#detalle").hidden = true; document.body.style.overflow = "";
+};
+
+/* ---------- Carrito ---------- */
+function pintarCarrito() {
+  const f = carrito.map((i, n) => ({ ...i, n, p: find(i.id) })).filter(x => x.p);
+  const total = f.reduce((s, x) => s + x.p.precio * x.cant, 0);
+  const cuenta = f.reduce((s, x) => s + x.cant, 0);
+  $("#contador").hidden = !cuenta; $("#contador").textContent = cuenta;
+  $("#items").innerHTML = f.length ? f.map(x => `
+    <div class="fila"><img src="${x.p.imagen}" alt="">
+      <div>${x.p.nombre}${x.talla ? " · " + x.talla : ""}<br>${money(x.p.precio * x.cant)}
+        <div class="cant"><button data-m="${x.n}">−</button><span>${x.cant}</span><button data-p="${x.n}">+</button>
+        <button class="q" data-q="${x.n}">Quitar</button></div></div>
+    </div>`).join("") : '<p class="vacio">Tu carrito está vacío</p>';
+  $("#total").textContent = money(total);
+  $("#pedir").disabled = !f.length;
+}
+$("#items").onclick = e => {
+  const d = e.target.dataset;
+  if (d.p) carrito[d.p].cant++;
+  else if (d.m) { if (--carrito[d.m].cant <= 0) carrito.splice(d.m, 1); }
+  else if (d.q) carrito.splice(d.q, 1);
+  else return;
+  guardar(); pintarCarrito();
+};
+$("#pedir").onclick = () => {
+  let total = 0;
+  const lineas = carrito.map(i => {
+    const p = find(i.id); if (!p) return "";
+    total += p.precio * i.cant;
+    return `- ${i.cant}x ${p.nombre}${i.talla ? " (talla " + i.talla + ")" : ""} - ${money(p.precio * i.cant)}`;
+  }).filter(Boolean);
+  const msg = `Hola Andr4sClub, quiero pedir:\n${lineas.join("\n")}\n\nTotal: ${money(total)}`;
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+};
+
+/* ---------- Paneles ---------- */
+function abrir(sel) { cerrar(); $(sel).classList.add("on"); $("#velo").hidden = false; document.body.style.overflow = "hidden"; }
+function cerrar() {
+  $$(".panel").forEach(p => p.classList.remove("on"));
+  $("#detalle").hidden = true; $("#velo").hidden = true; document.body.style.overflow = "";
+}
+$("#btn-menu").onclick = () => abrir("#menu");
+$("#btn-carrito").onclick = () => abrir("#carrito");
+$("#velo").onclick = cerrar;
+$$("[data-x]").forEach(b => b.onclick = cerrar);
+document.onkeydown = e => { if (e.key === "Escape") cerrar(); };
+
+/* ---------- Menú ---------- */
+function pintarMenu() {
+  const cats = ["todo", ...new Set(productos.map(p => p.categoria))];
+  $("#cats").innerHTML = cats.map(c =>
+    `<button data-c="${c}" class="${c === cat ? "on" : ""}">${c === "todo" ? "Ver todo" : c}</button>`).join("");
+  $("#wa").href = `https://wa.me/${WHATSAPP}`;
+  $("#ig").href = INSTAGRAM;
+}
+$("#cats").onclick = e => {
+  const b = e.target.closest("button"); if (!b) return;
+  cat = b.dataset.c; pintarMenu(); pintarGrid(); cerrar(); scrollTo(0, 0);
+};
+
+/* ---------- Inicio ---------- */
+fetch("products.json").then(r => r.json()).then(d => {
+  productos = d; pintarMenu(); pintarGrid(); pintarCarrito();
+}).catch(() => { $("#grid").innerHTML = "<p class='vacio'>Error cargando products.json</p>"; });
