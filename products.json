@@ -1,0 +1,12 @@
+[
+{"id":1,"nombre":"Camiseta Ciudad [Azul Negra]","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3832.jpeg","descripcion":"","agotado":false},
+{"id":2,"nombre":"Camiseta Ciudad [Azul Blanca]","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3833.jpeg","descripcion":"","agotado":false},
+{"id":3,"nombre":"Camiseta Corona [Negra]","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3834.jpeg","descripcion":"","agotado":false},
+{"id":4,"nombre":"Short Jean [Crema]","categoria":"shorts","precio":90000,"tallas":["30","32","34"],"imagen":"IMG_3835.jpeg","descripcion":"","agotado":false},
+{"id":5,"nombre":"Producto 5","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3836.jpeg","descripcion":"","agotado":false},
+{"id":6,"nombre":"Producto 6","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3837.jpeg","descripcion":"","agotado":false},
+{"id":7,"nombre":"Producto 7","categoria":"shorts","precio":90000,"tallas":["30","32","34"],"imagen":"IMG_3838.jpeg","descripcion":"","agotado":false},
+{"id":8,"nombre":"Producto 8","categoria":"shorts","precio":90000,"tallas":["30","32","34"],"imagen":"IMG_3839.jpeg","descripcion":"","agotado":false},
+{"id":9,"nombre":"Producto 9","categoria":"shorts","precio":90000,"tallas":["30","32","34"],"imagen":"IMG_3840.jpeg","descripcion":"","agotado":false},
+{"id":10,"nombre":"Producto 10","categoria":"camisetas","precio":80000,"tallas":["S","M","L","XL"],"imagen":"IMG_3841.jpeg","descripcion":"","agotado":false}
+]
