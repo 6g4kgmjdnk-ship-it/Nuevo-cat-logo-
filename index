@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Andr4sClub</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="barra"></div>
+
+<header>
+  <button class="icono" id="btn-menu" aria-label="Menú">
+    <svg viewBox="0 0 48 32" width="38" height="26"><rect width="48" height="6" rx="3"/><rect y="13" width="48" height="6" rx="3"/><rect y="26" width="48" height="6" rx="3"/></svg>
+  </button>
+  <a href="./" class="logo"><img src="logo.png" alt="Andr4sClub"></a>
+  <button class="icono" id="btn-carrito" aria-label="Carrito">
+    <svg viewBox="0 0 64 56" width="42" height="36" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h10l7 30h31l7-22H17"/><circle cx="25" cy="48" r="4" fill="currentColor"/><circle cx="46" cy="48" r="4" fill="currentColor"/></svg>
+    <b id="contador" hidden>0</b>
+  </button>
+</header>
+
+<main id="grid"></main>
+
+<div id="velo" hidden></div>
+
+<nav id="menu" class="panel izq">
+  <button class="x" data-x>✕</button>
+  <div id="cats"></div>
+  <a id="wa" target="_blank" rel="noopener">WhatsApp</a>
+  <a id="ig" target="_blank" rel="noopener">Instagram</a>
+</nav>
+
+<aside id="carrito" class="panel der">
+  <button class="x" data-x>✕</button>
+  <h2>Carrito</h2>
+  <div id="items"></div>
+  <div class="pie">
+    <p class="total"><span>Total</span><span id="total"></span></p>
+    <button class="btn" id="pedir">Pedir por WhatsApp</button>
+  </div>
+</aside>
+
+<section id="detalle" hidden>
+  <button class="x" data-x>✕</button>
+  <img id="d-img" alt="">
+  <h1 id="d-nombre"></h1>
+  <p id="d-precio"></p>
+  <p id="d-desc"></p>
+  <div id="d-tallas"></div>
+  <button class="btn" id="d-agregar">Agregar al carrito</button>
+</section>
+
+<div id="aviso"></div>
+<script src="script.js"></script>
+</body>
+</html>
